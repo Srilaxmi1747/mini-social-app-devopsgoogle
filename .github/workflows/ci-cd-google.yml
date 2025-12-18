@@ -57,7 +57,11 @@ jobs:
     # Docker → GHCR
     # --------------------
     - name: Login to GHCR
-      run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Set image name
+      run: |
+        echo "IMAGE_NAME=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/mini-social-app:latest" >> $GITHUB_ENV
 
     - name: Build Docker Image
       run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/mini-social-app:latest .
