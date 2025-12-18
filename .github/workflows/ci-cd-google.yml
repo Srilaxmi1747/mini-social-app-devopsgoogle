@@ -63,11 +63,11 @@ jobs:
       run: |
         echo "IMAGE_NAME=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/mini-social-app:latest" >> $GITHUB_ENV
 
-    - name: Build Docker Image
-      run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/mini-social-app:latest .
+    - name: Build Docker image
+      run: docker build -t $IMAGE_NAME .
 
-    - name: Push Docker Image
-      run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/mini-social-app:latest
+    - name: Push Docker image
+      run: docker push $IMAGE_NAMElatest
 
     # --------------------
     # Deploy to Render
