@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniSocialApp.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MiniSocialApp.Controllers
 {
     public class AccountController : Controller
     {
-        // Temporary in-memory user store (for mini project)
+        // Temporary in-memory user store
         private static List<User> users = new();
 
         // --------------------
@@ -55,3 +57,4 @@ namespace MiniSocialApp.Controllers
         }
     }
 }
+
