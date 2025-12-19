@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+<form method="post" action="/Account/Login">
+    <div style="margin-bottom:10px;">
+        <label>Email</label><br />
+        <input type="email" name="email" required />
+    </div>
+
+    <div style="margin-bottom:10px;">
+        <label>Password</label><br />
+        <input type="password" name="password" required />
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+
+<p>
+    Don’t have an account?
+    <a href="/Account/Register">Register here</a>
+</p>
