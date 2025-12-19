@@ -1,6 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://0.0.0.0:8080");
-// Add MVC services
+
+// Render-compatible port binding
+builder.WebHost.UseUrls("http://0.0.0.0:" + (Environment.GetEnvironmentVariable("PORT") ?? "10000"));
+
+// MVC services
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
