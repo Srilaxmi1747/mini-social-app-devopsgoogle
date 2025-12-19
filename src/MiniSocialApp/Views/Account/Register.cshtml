@@ -1,6 +1,10 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
 <h2>Register</h2>
 
-<form method="post">
+<form method="post" asp-action="Register">
     <label>Email</label><br />
     <input type="email" name="Email" required /><br /><br />
 
@@ -10,4 +14,5 @@
     <button type="submit">Register</button>
 </form>
 
+<br />
 <a href="/Account/Login">Already have an account? Login</a>
