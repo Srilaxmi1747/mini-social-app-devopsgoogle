@@ -5,14 +5,23 @@
 <h2>Register</h2>
 
 <form method="post" asp-action="Register">
-    <label>Email</label><br />
-    <input type="email" name="Email" required /><br /><br />
+    <div>
+        <label>Email</label><br />
+        <input type="email" name="Email" required />
+    </div>
 
-    <label>Password</label><br />
-    <input type="password" name="Password" required /><br /><br />
+    <br />
+
+    <div>
+        <label>Password</label><br />
+        <input type="password" name="Password" required />
+    </div>
+
+    <br />
 
     <button type="submit">Register</button>
 </form>
 
 <br />
+
 <a href="/Account/Login">Already have an account? Login</a>
