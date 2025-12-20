@@ -1,4 +1,14 @@
-public IActionResult Dashboard()
-{
-    return View();
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<h2>Dashboard</h2>
+
+<p>Welcome! You are logged in.</p>
+
+<ul>
+    <li><a href="/Post/Create">Create Post</a></li>
+    <li><a href="/Post/Feed">View Feed</a></li>
+    <li><a href="/Account/Login">Logout</a></li>
+</ul>
