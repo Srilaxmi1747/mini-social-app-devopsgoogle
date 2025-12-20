@@ -1,13 +1,35 @@
 @{
     ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Register</h2>
+<h2>Create Account</h2>
 
 <form method="post" asp-action="Register">
     <div>
+        <label>First Name</label><br />
+        <input type="text" name="FirstName" required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Last Name</label><br />
+        <input type="text" name="LastName" required />
+    </div>
+
+    <br />
+
+    <div>
         <label>Email</label><br />
         <input type="email" name="Email" required />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Phone Number</label><br />
+        <input type="tel" name="PhoneNumber" required />
     </div>
 
     <br />
@@ -24,4 +46,7 @@
 
 <br />
 
-<a href="/Account/Login">Already have an account? Login</a>
+<p>
+    Already have an account?
+    <a href="/Account/Login">Login here</a>
+</p>
