@@ -1,0 +1,28 @@
+@model List<MiniSocialApp.Models.Post>
+
+@{
+    ViewData["Title"] = "Post Feed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Post Feed</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No posts available.</p>
+}
+else
+{
+    foreach (var post in Model)
+    {
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            <h3>@post.Title</h3>
+            <p>@post.Content</p>
+        </div>
+    }
+}
+
+<br />
+
+<a href="/Post/Create">Create New Post</a> |
+<a href="/Home/Dashboard">Back to Dashboard</a>
