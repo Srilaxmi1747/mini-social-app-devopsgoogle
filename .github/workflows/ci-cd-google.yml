@@ -62,6 +62,27 @@ jobs:
     - name: Set image name
       run: |
         echo "IMAGE_NAME=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/mini-social-app:latest" >> $GITHUB_ENV
+        # --------------------
+# Deploy to DEV
+# --------------------
+- name: Deploy to DEV (Render)
+  if: github.ref == 'refs/heads/develop'
+  run: curl -X POST ${{ secrets.RENDER_DEPLOY_DEV }}
+
+# --------------------
+# Deploy to QA
+# --------------------
+- name: Deploy to QA (Render)
+  if: github.ref == 'refs/heads/qa'
+  run: curl -X POST ${{ secrets.RENDER_DEPLOY_QA }}
+
+# --------------------
+# Deploy to PROD
+# --------------------
+- name: Deploy to PROD (Render)
+  if: github.ref == 'refs/heads/main'
+  run: curl -X POST ${{ secrets.RENDER_DEPLOY_PROD }}
+
 
     - name: Build Docker image
       run: docker build -t $IMAGE_NAME .
