@@ -63,6 +63,9 @@ jobs:
       run: |
         echo "IMAGE_NAME=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/mini-social-app:latest" >> $GITHUB_ENV
 
+    - name: Debug image name
+      run: echo "IMAGE_NAME is $IMAGE_NAME" 
+
     - name: Build Docker image
       run: docker build -t $IMAGE_NAME .
 
