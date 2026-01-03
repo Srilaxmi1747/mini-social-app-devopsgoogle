@@ -1,52 +1,7 @@
-@{
-    ViewData["Title"] = "Register";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
-<h2>Create Account</h2>
-
-<form method="post" asp-action="Register">
-    <div>
-        <label>First Name</label><br />
-        <input type="text" name="FirstName" required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Last Name</label><br />
-        <input type="text" name="LastName" required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Email</label><br />
-        <input type="email" name="Email" required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Phone Number</label><br />
-        <input type="tel" name="PhoneNumber" required />
-    </div>
-
-    <br />
-
-    <div>
-        <label>Password</label><br />
-        <input type="password" name="Password" required />
-    </div>
-
-    <br />
-
-    <button type="submit">Register</button>
+<h2>Register</h2>
+<form method="post">
+  <input name="Username" placeholder="Username" />
+  <input name="Password" type="password" />
+  <button type="submit">Register</button>
 </form>
-
-<br />
-
-<p>
-    Already have an account?
-    <a href="/Account/Login">Login here</a>
-</p>
