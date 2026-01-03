@@ -3,91 +3,98 @@ name: CI-CD-Render
 on:
   push:
     branches:
+      - main
       - develop
       - qa
-      - main
 
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # --------------------
-    # Checkout
-    # --------------------
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # --------------------
-    # Setup .NET
-    # --------------------
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    # --------------------
-    # Restore & Build
-    # --------------------
-    - name: Restore
-      run: dotnet restore src/MiniSocialApp/MiniSocialApp.csproj
+      # --------------------
+      # Restore & Build
+      # --------------------
+      - name: Restore
+        run: dotnet restore src/MiniSocialApp/MiniSocialApp.csproj
 
-    - name: Build
-      run: dotnet build src/MiniSocialApp/MiniSocialApp.csproj --no-restore
+      - name: Build
+        run: dotnet build src/MiniSocialApp/MiniSocialApp.csproj --no-restore
 
-    # --------------------
-    # Test + Coverage
-    # --------------------
-    - name: Test with Coverage
-      run: |
-        dotnet test tests/MiniSocialApp.Tests/MiniSocialApp.Tests.csproj \
-        /p:CollectCoverage=true \
-        /p:CoverletOutputFormat=opencover \
-        /p:CoverletOutput=./coverage/
+      # --------------------
+      # Test + Coverlet
+      # --------------------
+      - name: Test with Coverage
+        run: |
+          dotnet test tests/MiniSocialApp.Tests/MiniSocialApp.Tests.csproj \
+          /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=opencover \
+          /p:CoverletOutput=./coverage/
 
-    # --------------------
-    # SonarCloud
-    # --------------------
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # --------------------
+      # SonarCloud
+      # --------------------
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-    # --------------------
-    # Docker → GHCR
-    # --------------------
-    - name: Login to GHCR
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      # --------------------
+      # Upload Artifacts
+      # --------------------
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coverage
 
-    - name: Set image name
-      run: |
-        echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/mini-social-app:latest" \
-        | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
+            # --------------------
+      # Docker → GHCR
+      # --------------------
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Build Docker image
-      run: docker build -t $IMAGE_NAME .
+      - name: Set IMAGE_NAME
+        run: |
+          echo "IMAGE_NAME=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/mini-social-app:latest" >> $GITHUB_ENV
 
-    - name: Push Docker image
-      run: docker push $IMAGE_NAME
+      - name: Debug IMAGE_NAME
+        run: echo "IMAGE_NAME=$IMAGE_NAME"
+      
+      
+      - name: Build Docker image
+        run: |
+          echo "Building image: $IMAGE_NAME"
+          docker build -t $IMAGE_NAME .
 
-    # --------------------
-    # Deploy to DEV
-    # --------------------
-    - name: Deploy to DEV (Render)
-      if: github.ref == 'refs/heads/develop'
-      run: curl -X POST "${{ secrets.RENDER_DEPLOY_DEV }}"
+      - name: Push Docker image
+        run: docker push $IMAGE_NAME
 
-    # --------------------
-    # Deploy to QA
-    # --------------------
-    - name: Deploy to QA (Render)
-      if: github.ref == 'refs/heads/qa'
-      run: curl -X POST "${{ secrets.RENDER_DEPLOY_QA }}"
+      # --------------------
+      # Deploy to DEV
+      # --------------------
+      - name: Deploy to DEV (Render)
+        if: github.ref == 'refs/heads/develop'
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_DEV }}"
 
-    # --------------------
-    # Deploy to PROD
-    # --------------------
-    - name: Deploy to PROD (Render)
-      if: github.ref == 'refs/heads/main'
-      run: curl -X POST "${{ secrets.RENDER_DEPLOY_PROD }}"
+      # --------------------
+      # Deploy to QA
+      # --------------------
+      - name: Deploy to QA (Render)
+        if: github.ref == 'refs/heads/qa'
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_QA }}"
 
+      # --------------------
+      # Deploy to PROD
+      # --------------------
+      - name: Deploy to PROD (Render)
+        if: github.ref == 'refs/heads/main'
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_PROD }}"
